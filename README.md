@@ -1,6 +1,6 @@
-# Fetch
+# Sample Front-End Engineering Problem
 
-At Ad Hoc, our front-end applications often exchange JSON data with various RESTful APIs. We use modern JavaScript
+At [Redacted], our front-end applications often exchange JSON data with various RESTful APIs. We use modern JavaScript
 to interact with these APIs and to transform their responses into a format needed by the client application. In
 this homework, we provide a sample API with a single endpoint and ask you to write some JavaScript to request data from
 the API and transform the response.
@@ -46,7 +46,7 @@ An example request URL might look like:
 
 In `api/managed-records.js`, write a function named `retrieve` that requests data from the `/records` endpoint, transforms the result into the format outlined below, and returns a promise that resolves with the transformed object. In addition to `retrieve`, you may add as many helper functions as you wish.
 
-1. Get data from the `/records` endpoint using the Fetch API. Process pages of 10 items at a time. Note that the `/records` endpoint may return more than 10 items per request.
+1. Get data from the `/records` endpoint using the Sample API. Process pages of 10 items at a time. Note that the `/records` endpoint may return more than 10 items per request.
 
 2. The `retrieve` function accepts an `options` object and should support the following keys:
 
