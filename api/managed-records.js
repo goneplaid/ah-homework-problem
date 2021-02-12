@@ -3,6 +3,22 @@ import URI from "urijs";
 
 window.path = "http://localhost:3000/records";
 
+async function retrieve(params = {}) {
+  const primaryColors = ['red', 'blue', 'yellow'];
+  const colorRange = [...primaryColors, 'brown', 'green'];
+  const config = buildConfig(params, primaryColors);
+
+  let records = [];
+
+  if (!(config.colorFilter.length === 1 && !colorRange.includes(config.colorFilter[0]))) {
+    records = await fetchRecords(config);
+  }
+
+  return renderPayload(records, config);
+}
+
+export default retrieve;
+
 function buildConfig(params, primaryColors) {
   const LIMIT = 10;
 
@@ -19,16 +35,18 @@ function buildConfig(params, primaryColors) {
   };
 }
 
-function buildUri(config = {}) {
-  // always grab one extra to determine if this is the last page or not
-  const queryParams = {
-    limit: config.limit + 1,
-    offset: config.offset,
-  };
+async function fetchRecords(config) {
+  const response = await fetch(buildUri(config));
 
-  if (config.colorFilter.length) queryParams['color[]'] = config.colorFilter;
+  let records = [];
 
-  return URI(window.path).query(queryParams).toString();
+  try {
+    records = await response.json();
+  } catch (error) {
+    console.log(error);
+  }
+
+  return records;
 }
 
 function renderPayload(recordsPlusOne, config) {
@@ -55,34 +73,14 @@ function renderPayload(recordsPlusOne, config) {
   };
 }
 
-async function fetchRecords(config) {
-  const response = await fetch(buildUri(config));
+function buildUri(config) {
+  // always grab one extra to determine if this is the last page or not
+  const queryParams = {
+    limit: config.limit + 1,
+    offset: config.offset,
+  };
 
-  let records = [];
+  if (config.colorFilter.length) queryParams['color[]'] = config.colorFilter;
 
-  try {
-    records = await response.json();
-  } catch (error) {
-    console.log(error);
-  }
-
-  return records;
+  return URI(window.path).query(queryParams).toString();
 }
-
-async function retrieve(params = {}) {
-  const primaryColors = ['red', 'blue', 'yellow'];
-  const colorRange = [...primaryColors, 'brown', 'green'];
-  const config = buildConfig(params, primaryColors);
-
-  if (config.colorFilter.length === 1 && !colorRange.includes(config.colorFilter[0])) {
-    config.page = 0;
-
-    return renderPayload([], config);
-  }
-
-  const records = await fetchRecords(config);
-
-  return renderPayload(records, config);
-}
-
-export default retrieve;
