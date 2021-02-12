@@ -15,20 +15,6 @@ function buildUri(config = {}) {
   return URI(window.path).query(queryParams).toString();
 }
 
-async function fetchRecords(config) {
-  const response = await fetch(buildUri(config));
-
-  let records = [];
-
-  try {
-    records = await response.json();
-  } catch (error) {
-    console.log(error);
-  }
-
-  return records;
-}
-
 async function retrieve(params = {}) {
   const primaryColors = ['red', 'blue', 'yellow'];
   const colorRange = [...primaryColors, 'brown', 'green'];
@@ -84,6 +70,20 @@ async function retrieve(params = {}) {
       previousPage,
       nextPage,
     };
+  }
+
+  async function fetchRecords(config) {
+    const response = await fetch(buildUri(config));
+
+    let records = [];
+
+    try {
+      records = await response.json();
+    } catch (error) {
+      console.log(error);
+    }
+
+    return records;
   }
 }
 
