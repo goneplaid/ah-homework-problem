@@ -3,18 +3,6 @@ import URI from "urijs";
 
 window.path = "http://localhost:3000/records";
 
-function buildUri(config = {}) {
-  // always grab one extra to determine if this is the last page or not
-  const queryParams = {
-    limit: config.limit + 1,
-    offset: config.offset,
-  };
-
-  if (config.colorFilter.length) queryParams['color[]'] = config.colorFilter;
-
-  return URI(window.path).query(queryParams).toString();
-}
-
 async function retrieve(params = {}) {
   const primaryColors = ['red', 'blue', 'yellow'];
   const colorRange = [...primaryColors, 'brown', 'green'];
@@ -84,6 +72,18 @@ async function retrieve(params = {}) {
     }
 
     return records;
+  }
+
+  function buildUri(config = {}) {
+    // always grab one extra to determine if this is the last page or not
+    const queryParams = {
+      limit: config.limit + 1,
+      offset: config.offset,
+    };
+
+    if (config.colorFilter.length) queryParams['color[]'] = config.colorFilter;
+
+    return URI(window.path).query(queryParams).toString();
   }
 }
 
