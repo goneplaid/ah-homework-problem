@@ -15,30 +15,6 @@ function buildUri(config = {}) {
   return URI(window.path).query(queryParams).toString();
 }
 
-function renderPayload(recordsPlusOne, config) {
-  const records = recordsPlusOne.slice(0, config.limit);
-  const openRecords = records.filter(r => r.disposition === 'open');
-  const closedRecords = records.filter(r => !openRecords.includes(r));
-
-  const ids = records.map(r => r.id);
-  const open = openRecords.map((r) => ({ ...r, isPrimary: config.primaryColors.includes(r.color) }));
-  const closedPrimaryCount = closedRecords.filter(r => config.primaryColors.includes(r.color)).length;
-
-  const hasPreviousPage = config.page > 1;
-  const hasNextPage = !(recordsPlusOne.length < config.limit + 1);
-
-  const previousPage = hasPreviousPage ? config.page - 1 : null;
-  const nextPage = hasNextPage ? config.page + 1 : null;
-
-  return {
-    ids,
-    open,
-    closedPrimaryCount,
-    previousPage,
-    nextPage,
-  };
-}
-
 async function fetchRecords(config) {
   const response = await fetch(buildUri(config));
 
@@ -83,6 +59,30 @@ async function retrieve(params = {}) {
       offset,
       colorFilter,
       primaryColors,
+    };
+  }
+
+  function renderPayload(recordsPlusOne, config) {
+    const records = recordsPlusOne.slice(0, config.limit);
+    const openRecords = records.filter(r => r.disposition === 'open');
+    const closedRecords = records.filter(r => !openRecords.includes(r));
+
+    const ids = records.map(r => r.id);
+    const open = openRecords.map((r) => ({ ...r, isPrimary: config.primaryColors.includes(r.color) }));
+    const closedPrimaryCount = closedRecords.filter(r => config.primaryColors.includes(r.color)).length;
+
+    const hasPreviousPage = config.page > 1;
+    const hasNextPage = !(recordsPlusOne.length < config.limit + 1);
+
+    const previousPage = hasPreviousPage ? config.page - 1 : null;
+    const nextPage = hasNextPage ? config.page + 1 : null;
+
+    return {
+      ids,
+      open,
+      closedPrimaryCount,
+      previousPage,
+      nextPage,
     };
   }
 }
