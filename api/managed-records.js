@@ -9,8 +9,6 @@ async function retrieve(params = {}) {
   const config = buildConfig(params, primaryColors);
 
   if (config.colorFilter.length === 1 && !colorRange.includes(config.colorFilter[0])) {
-    config.page = 0;
-
     return renderPayload([], config);
   }
 
