@@ -8,11 +8,11 @@ async function retrieve(params = {}) {
   const colorRange = [...primaryColors, 'brown', 'green'];
   const config = buildConfig(params, primaryColors);
 
-  if (config.colorFilter.length === 1 && !colorRange.includes(config.colorFilter[0])) {
-    return renderPayload([], config);
-  }
+  let records = [];
 
-  const records = await fetchRecords(config);
+  if (!(config.colorFilter.length === 1 && !colorRange.includes(config.colorFilter[0]))) {
+    records = await fetchRecords(config);
+  }
 
   return renderPayload(records, config);
 
@@ -32,6 +32,20 @@ async function retrieve(params = {}) {
       colorFilter,
       primaryColors,
     };
+  }
+
+  async function fetchRecords(config) {
+    const response = await fetch(buildUri(config));
+
+    let records = [];
+
+    try {
+      records = await response.json();
+    } catch (error) {
+      console.log(error);
+    }
+
+    return records;
   }
 
   function renderPayload(recordsPlusOne, config) {
@@ -56,20 +70,6 @@ async function retrieve(params = {}) {
       previousPage,
       nextPage,
     };
-  }
-
-  async function fetchRecords(config) {
-    const response = await fetch(buildUri(config));
-
-    let records = [];
-
-    try {
-      records = await response.json();
-    } catch (error) {
-      console.log(error);
-    }
-
-    return records;
   }
 
   function buildUri(config = {}) {
