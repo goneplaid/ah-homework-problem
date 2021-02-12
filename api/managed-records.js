@@ -73,7 +73,7 @@ function renderPayload(recordsPlusOne, config) {
   };
 }
 
-function buildUri(config = {}) {
+function buildUri(config) {
   // always grab one extra to determine if this is the last page or not
   const queryParams = {
     limit: config.limit + 1,
