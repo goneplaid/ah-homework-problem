@@ -3,22 +3,6 @@ import URI from "urijs";
 
 window.path = "http://localhost:3000/records";
 
-function buildConfig(params, primaryColors) {
-  const LIMIT = 10;
-
-  const page = params.page || 1;
-  const offset = page === 1 ? 0 : (page - 1) * LIMIT;
-  const colorFilter = params.colors || [];
-
-  return {
-    page,
-    limit: LIMIT,
-    offset,
-    colorFilter,
-    primaryColors,
-  };
-}
-
 function buildUri(config = {}) {
   // always grab one extra to determine if this is the last page or not
   const queryParams = {
@@ -83,6 +67,24 @@ async function retrieve(params = {}) {
   const records = await fetchRecords(config);
 
   return renderPayload(records, config);
+
+  // Internal functions
+
+  function buildConfig(params, primaryColors) {
+    const LIMIT = 10;
+
+    const page = params.page || 1;
+    const offset = page === 1 ? 0 : (page - 1) * LIMIT;
+    const colorFilter = params.colors || [];
+
+    return {
+      page,
+      limit: LIMIT,
+      offset,
+      colorFilter,
+      primaryColors,
+    };
+  }
 }
 
 export default retrieve;
